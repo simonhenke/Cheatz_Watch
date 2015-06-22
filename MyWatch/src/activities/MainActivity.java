@@ -1,4 +1,4 @@
-package Activities;
+package activities;
 
 
 

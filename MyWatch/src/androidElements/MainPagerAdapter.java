@@ -1,4 +1,4 @@
-package AndroidElements;
+package androidElements;
 
 import java.util.ArrayList;
 

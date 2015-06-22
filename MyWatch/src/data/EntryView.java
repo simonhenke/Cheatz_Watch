@@ -1,4 +1,4 @@
-package Data;
+package data;
 
 import android.content.Context;
 import android.graphics.Point;

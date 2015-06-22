@@ -1,4 +1,4 @@
-package AndroidElements;
+package androidElements;
 
 import android.content.Context;
 import android.view.animation.Interpolator;

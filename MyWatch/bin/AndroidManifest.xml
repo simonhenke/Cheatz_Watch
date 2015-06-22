@@ -40,7 +40,7 @@
             android:label="@string/title_activity_cheat_animation" >
         </activity>
         <activity
-            android:name="Activities$SoundLevelCalibration"
+            android:name="activities"
             android:label="@string/title_activity_sound_level_calibration" >
         </activity>
     </application>

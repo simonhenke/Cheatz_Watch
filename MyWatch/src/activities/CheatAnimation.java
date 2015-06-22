@@ -1,17 +1,18 @@
-package Activities;
+package activities;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.ListIterator;
+
+import sensors.AudioLevelDispatcher;
+import sensors.AudioLevelListener;
+import sensors.OnSwipeTouchListener;
+import sensors.WristFlickDispatcher;
+import sensors.WristFlickListener;
+
 import com.example.mywatch.R;
-import AndroidElements.FixedSpeedScroller;
-import AndroidElements.MainPagerAdapter;
-import Data.EntryView;
-import Sensors.AudioLevelDispatcher;
-import Sensors.AudioLevelListener;
-import Sensors.OnSwipeTouchListener;
-import Sensors.WristFlickDispatcher;
-import Sensors.WristFlickListener;
+
+import data.EntryView;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -35,6 +36,8 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidElements.FixedSpeedScroller;
+import androidElements.MainPagerAdapter;
 
 public class CheatAnimation extends Activity implements WristFlickListener,AudioLevelListener {
 

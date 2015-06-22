@@ -1,4 +1,4 @@
-package Activities;
+package activities;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

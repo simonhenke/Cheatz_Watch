@@ -1,4 +1,4 @@
-package Activities;
+package activities;
 
 import com.example.mywatch.R;
 import com.example.mywatch.R.id;
