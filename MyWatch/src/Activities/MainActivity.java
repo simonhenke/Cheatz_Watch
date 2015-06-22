@@ -1,4 +1,4 @@
-package com.example.mywatch;
+package Activities;
 
 
 
@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.example.mywatch.R;
+import com.example.mywatch.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;

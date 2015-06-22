@@ -1,4 +1,4 @@
-package com.example.mywatch;
+package AndroidElements;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
-class MainPagerAdapter extends PagerAdapter
+public class MainPagerAdapter extends PagerAdapter
 {
   // This holds all the currently displayable views, in order from left to right.
   private ArrayList<View> views = new ArrayList<View>();

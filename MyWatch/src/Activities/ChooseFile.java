@@ -1,9 +1,13 @@
-package com.example.mywatch;
+package Activities;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import com.example.mywatch.R;
+import com.example.mywatch.R.id;
+import com.example.mywatch.R.layout;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -124,11 +128,9 @@ public class ChooseFile extends Activity {
 		return content;
 	}
 	
-	
 	public void openChooseSpeed(String content) {
 	    Intent intent = new Intent(ChooseFile.this, SpeedChooser.class);
 	    intent.putExtra("content", content);
-	    ChooseFile.this.startActivity(intent);
-	    
+	    ChooseFile.this.startActivity(intent);	    
 	}
 }

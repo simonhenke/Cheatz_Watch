@@ -1,8 +1,12 @@
-package com.example.mywatch;
+package Activities;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import com.example.mywatch.R;
+import com.example.mywatch.R.id;
+import com.example.mywatch.R.layout;
 
 import android.app.Activity;
 import android.content.Context;

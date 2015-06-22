@@ -1,4 +1,4 @@
-package com.example.mywatch;
+package AndroidElements;
 
 import android.content.Context;
 import android.view.animation.Interpolator;

@@ -1,4 +1,4 @@
-package com.example.mywatch;
+package Sensors;
 
 import android.content.Context;
 import android.media.AudioFormat;
@@ -23,6 +23,7 @@ public class AudioLevelDispatcher {
 	public AudioLevelDispatcher(Context context){		
 			
 	}
+	
 	public void startRecording()
 	{	
 		try {
@@ -63,6 +64,12 @@ public class AudioLevelDispatcher {
 		this.listener = listener;
 	}
 	
+	public void setMinimumReactionValue(int minLevel)
+	{
+		minimumReactionValue = minLevel;
+	}
+	
+	
 	private void readAudioBuffer() {
 		 
 	    try {
@@ -94,6 +101,7 @@ public class AudioLevelDispatcher {
 			        //Let's make the thread sleep for a the approximate sampling time
 			        try{Thread.sleep(50);}catch(InterruptedException ie){ie.printStackTrace();}
 			        readAudioBuffer();//After this call we can get the last value assigned to the lastLevel variable		       				           
+			        listener.onLevelChanged(lastLevel);
 			        if(lastLevel > minimumReactionValue && !releaseTimeActive){
 			        	activateReleaseTime();
 			        	listener.onVeryLoudSoundDetected();		        	
@@ -113,8 +121,7 @@ public class AudioLevelDispatcher {
 					 Log.e("test","test2");
 				 }
 			 }).start();
-		 }
-		 
+		 }		 
 	};
 	
 }

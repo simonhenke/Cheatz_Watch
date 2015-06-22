@@ -1,45 +1,38 @@
-package com.example.mywatch;
+package Activities;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
-
+import com.example.mywatch.R;
+import AndroidElements.FixedSpeedScroller;
+import AndroidElements.MainPagerAdapter;
+import Data.EntryView;
+import Sensors.AudioLevelDispatcher;
+import Sensors.AudioLevelListener;
+import Sensors.OnSwipeTouchListener;
+import Sensors.WristFlickDispatcher;
+import Sensors.WristFlickListener;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.os.Vibrator;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.MeasureSpec;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -79,14 +72,7 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 	private MainPagerAdapter pagerAdapter;
 	
 	//---- Audio Recording
-	MediaRecorder recorder;
-	Thread recorderThread;
-	AudioRecord audio;
-	int sampleRate = 8000;
-	int bufferSize;
-	double lastLevel;
-	boolean threadStopped;
-	AudioLevelDispatcher audioLevelRecorder;
+	private AudioLevelDispatcher audioLevelRecorder;
 	//----
 	
 	// --------------------------------------------------------------------------------
@@ -152,28 +138,12 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 		stopIndicator.setText("stopped");
 		runLoop = false;	
 		
-		//Stop Audio Recorder
-		/*
-		if(audio != null)
-			audio.stop();
-		recorderThread.interrupt();
-		Log.e("ONPAUSE","----");
-		threadStopped = true;*/
-		
+	
 		audioLevelRecorder.stopRecording();
 	}
 	
 	public void onResume() {
 		super.onResume();
-		/*
-		if(audio != null)
-			audio.startRecording();
-		threadStopped = false;
-		recorderThread = new Thread(threadi);
-		recorderThread.start();
-		
-		Log.e("ONRESUME","----");*/
-
     	audioLevelRecorder.startRecording(); 
 	}
 	
@@ -222,8 +192,8 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 		OnSwipeTouchListener touchListener = new OnSwipeTouchListener(this) {
 			public void onSwipeLeft() {/*changeChapter(true);*/}
 			public void onSwipeRight() {/*changeChapter(false);*/}
-			public void onLongClick(){onLongClickAction();}
-			public void onShortClick(){onClickAction();}
+			public void onLongClick(){reverseAnimation();}
+			public void onShortClick(){startStopAnimation();}
 		};	
 		
 		// Hardcoding Elements
@@ -434,7 +404,7 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 	
 
 				
-	public void onClickAction(){
+	public void startStopAnimation(){
 		if(runLoop == true){
 			animationThread.onPause();
 			stopIndicator.setText("stopped");
@@ -447,7 +417,7 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 		}	
 	}
 
-	public void onLongClickAction() {	
+	public void reverseAnimation() {	
 		reverse = (reverse ? false: true);
 		Log.e("->","long click");
 		vibe.vibrate(100);
@@ -545,9 +515,14 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 	public void onVeryLoudSoundDetected() {
 		runOnUiThread(new Runnable() {
 	        public void run() {
-	         onClickAction();
+	         startStopAnimation();
 	        }
 	});	
+	}
+
+	@Override
+	public void onLevelChanged(double value) {
+		
 	}
 	
 	

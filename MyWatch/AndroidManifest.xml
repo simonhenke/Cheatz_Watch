@@ -8,13 +8,13 @@
         android:minSdkVersion="13"
         android:targetSdkVersion="21" />
 
-    <application       
+    <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities$MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,22 +26,25 @@
             android:name=".TestActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".ChooseFile"
+            android:name=".Activities$ChooseFile"
             android:label="@string/app_name" />
         <activity
-            android:name=".SpeedChooser"
+            android:name=".Activities$SpeedChooser"
             android:label="@string/title_activity_speed_chooser" >
         </activity>
-         <activity
-            android:name=".FontChooser"
+        <activity
+            android:name=".Activities$FontChooser"
             android:label="@string/app_name" />
         <activity
-            android:name=".CheatAnimation"
+            android:name=".Activities$CheatAnimation"
             android:label="@string/title_activity_cheat_animation" >
         </activity>
-             
+        <activity
+            android:name="Activities$SoundLevelCalibration"
+            android:label="@string/title_activity_sound_level_calibration" >
+        </activity>
     </application>
-    
+
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 

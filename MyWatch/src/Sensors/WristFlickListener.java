@@ -1,4 +1,4 @@
-package com.example.mywatch;
+package Sensors;
 
 public interface WristFlickListener {
 
