@@ -34,7 +34,7 @@ public class SoundLevelCalibration extends Activity implements AudioLevelListene
 		setContentView(R.layout.activity_sound_level_calibration);
 
 		//initialize shared prefs
-    	SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+    	SharedPreferences sharedPref = this.getSharedPreferences("CheatzCalibration",Context.MODE_PRIVATE);
     	maxProgress = sharedPref.getInt("blowReactionValue", 100);
     	editor = sharedPref.edit();
     	

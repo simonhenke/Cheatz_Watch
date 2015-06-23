@@ -1,6 +1,7 @@
 package sensors;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -18,8 +19,9 @@ public class AudioLevelDispatcher {
 	private boolean releaseTimeActive;
 	
 	public AudioLevelDispatcher(Context context){		
+		SharedPreferences sharedPref = context.getSharedPreferences("CheatzCalibration", Context.MODE_PRIVATE);
+		minimumReactionValue  = sharedPref.getInt("blowReactionValue", 100);
 		sampleRate = 8000;
-		minimumReactionValue = 25;
 	}
 	
 	public void startRecording()
