@@ -6,6 +6,8 @@ import com.example.mywatch.R;
 import sensors.AudioLevelDispatcher;
 import sensors.AudioLevelListener;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ProgressBar;
@@ -23,15 +25,20 @@ public class SoundLevelCalibration extends Activity implements AudioLevelListene
 	private AudioLevelDispatcher audioLevelRecorder;
 	private Handler handler = new Handler();
 	private int maxProgress;
+	private SharedPreferences.Editor editor;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		maxProgress = 100;
-		
 		setContentView(R.layout.activity_sound_level_calibration);
 
+		//initialize shared prefs
+    	SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+    	maxProgress = sharedPref.getInt("blowReactionValue", 100);
+    	editor = sharedPref.edit();
+    	
+		
 		//initialize variables
 		seekBar = (SeekBar) findViewById(R.id.seekBar1);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
@@ -47,20 +54,16 @@ public class SoundLevelCalibration extends Activity implements AudioLevelListene
     	
     	//set initial progress
     	seekBar.setProgress(maxProgress);
-    	seekBar.setMax(2*maxProgress);
+    	seekBar.setMax(200);
     	progressBar.setMax(maxProgress);
     	setMinimumReactionValue(maxProgress);
     	
+    	
 	}
 
-	
-	
-	
 	private void setMinimumReactionValue(int minLevel) {
 		audioLevelRecorder.setMinimumReactionValue(minLevel);
 	}
-
-
 
 
 	@Override
@@ -102,6 +105,15 @@ public class SoundLevelCalibration extends Activity implements AudioLevelListene
 	}
 
 
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		editor.putInt("blowReactionValue", maxProgress);
+		editor.commit();
+	}
+
+
+
+
 
 
 	@Override
@@ -112,12 +124,6 @@ public class SoundLevelCalibration extends Activity implements AudioLevelListene
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {}
-
-
-
-
-	@Override
-	public void onStopTrackingTouch(SeekBar seekBar) {}
 
 	
 }
