@@ -524,7 +524,7 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 	}
 
 	@Override
-	public void onLevelChanged(double value) {
+	public void onLevelChanged(int value) {
 		
 	}
 	
