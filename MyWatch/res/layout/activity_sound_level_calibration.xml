@@ -9,9 +9,35 @@
     <!-- tools:context="Activities$SoundLevelCalibration"  -->
 
 
-    <TextView
+   	<SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"
+        android:layout_below="@+id/soundtext"
+        />
+   
+     <TextView
+        android:id="@id/soundtext"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progressBar1"
+        />
+     
+     <TextView
+        android:id="@+id/loudtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
+        android:layout_toRightOf="@id/soundtext"
+        />
+     
+      <ProgressBar
+        android:id="@id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:indeterminate="false"
+        android:progress="1" />
 </RelativeLayout>
