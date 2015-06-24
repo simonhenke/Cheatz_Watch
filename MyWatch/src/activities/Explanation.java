@@ -1,10 +1,9 @@
-package com.example.mywatch.activities;
+package activities;
+
+import sensors.OnSwipeTouchListener;
 
 import com.example.mywatch.R;
 import com.example.mywatch.R.layout;
-import com.example.mywatch.androidElements.InfinitePagerAdapter;
-import com.example.mywatch.androidElements.MainPagerAdapter;
-import com.example.mywatch.sensors.OnSwipeTouchListener;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
+import androidElements.InfinitePagerAdapter;
+import androidElements.MainPagerAdapter;
 
 public class Explanation extends Activity{
 

@@ -1,4 +1,4 @@
-package com.example.mywatch.data;
+package data;
 
 import android.content.Context;
 import android.graphics.Point;

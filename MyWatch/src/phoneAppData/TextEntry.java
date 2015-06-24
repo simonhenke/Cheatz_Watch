@@ -1,4 +1,4 @@
-package com.example.mywatch.phoneAppData;
+package phoneAppData;
 
 public class TextEntry implements Entry {
 

@@ -1,4 +1,4 @@
-package com.example.mywatch.phoneAppUtil;
+package phoneAppUtil;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -16,12 +16,11 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import com.example.mywatch.phoneAppData.Chapter;
-import com.example.mywatch.phoneAppData.Entry;
-import com.example.mywatch.phoneAppData.ImageEntry;
-import com.example.mywatch.phoneAppData.Sheet;
-import com.example.mywatch.phoneAppData.TextEntry;
-
+import phoneAppData.Chapter;
+import phoneAppData.Entry;
+import phoneAppData.ImageEntry;
+import phoneAppData.Sheet;
+import phoneAppData.TextEntry;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;

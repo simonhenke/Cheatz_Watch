@@ -1,4 +1,4 @@
-package com.example.mywatch.sensors;
+package sensors;
 
 import android.content.Context;
 import android.view.GestureDetector;

@@ -1,4 +1,4 @@
-package com.example.mywatch.phoneAppData;
+package phoneAppData;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

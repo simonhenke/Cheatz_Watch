@@ -1,4 +1,4 @@
-package com.example.mywatch.phoneAppData;
+package phoneAppData;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

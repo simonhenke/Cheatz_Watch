@@ -1,4 +1,4 @@
-package com.example.mywatch.activities;
+package activities;
 
 
 

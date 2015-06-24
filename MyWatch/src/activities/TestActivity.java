@@ -1,4 +1,4 @@
-package com.example.mywatch.activities;
+package activities;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

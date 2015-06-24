@@ -1,4 +1,4 @@
-package com.example.mywatch.androidElements;
+package androidElements;
 
 import java.util.ArrayList;
 

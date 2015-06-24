@@ -1,8 +1,9 @@
-package com.example.mywatch.sensors;
+
+package sensors;
 
 public interface AudioLevelListener {
 
 	public void onVeryLoudSoundDetected();	
 	
-	public void onLevelChanged(double value);
+	public void onLevelChanged(int value);
 }

@@ -1,13 +1,15 @@
-package com.example.mywatch.activities;
+package activities;
 
 import com.example.mywatch.R;
 import com.example.mywatch.R.id;
 import com.example.mywatch.R.layout;
+import activities.CheatAnimation;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,34 +18,38 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SpeedChooser extends Activity {
+public class FontChooser extends Activity {
 	
 	String content;
 	int delayTime;
-	int delayMinimum;
+	int fontSize;
+	int fontMinimum;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.speed_chooser);
+		setContentView(R.layout.font_chooser);
 		
 		Bundle extras = getIntent().getExtras();
 		if(extras !=null) {
 		    content = extras.getString("content");
+		    delayTime = extras.getInt("delay");
 		}		
 		
 		
 		SeekBar seek;
-		final TextView seekValue;
+		final TextView fontExample;
 		
 		seek = (SeekBar)findViewById(R.id.seekBar1);
-		seekValue = (TextView)findViewById(R.id.seekValue);
-
-		delayMinimum = 800;
-		seek.setMax(5000 - delayMinimum);
+		fontExample = (TextView)findViewById(R.id.fontSize);
+		
+		fontMinimum = 8;
+		seek.setMax(40-fontMinimum);
+		
 		seek.setProgress(seek.getMax()/2);
-		seekValue.setText(""+(seek.getProgress()+delayMinimum));
-		delayTime = (seek.getProgress()+delayMinimum);
+		fontExample.setText(""+(seek.getProgress()+fontMinimum));
+		fontExample.setTextSize(TypedValue.COMPLEX_UNIT_SP, (seek.getProgress()+fontMinimum));
+		fontSize = (seek.getProgress()+fontMinimum);
 		
 		seek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {       
 		    @Override       
@@ -54,22 +60,23 @@ public class SpeedChooser extends Activity {
 		    }       
 
 		    @Override       
-		    public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) { 
-		    	// round the value to nearest 100
-		    	int actualValue = Math.round(progress/100)*100;
-		    	actualValue += delayMinimum;		    	
-		        seekValue.setText(""+actualValue);		
-		        delayTime = actualValue;
+		    public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) { 	    	 
+		    	progress = progress+fontMinimum;
+		    	
+		    	fontExample.setText(""+progress);	
+		    	fontExample.setTextSize(TypedValue.COMPLEX_UNIT_SP,progress);
+		        fontSize = progress;		       
 		    }       
 		});             
 	}
 	
 	public void nextActivity(View view)
 	{
-		Intent intent = new Intent(SpeedChooser.this, FontChooser.class);
+		Intent intent = new Intent(FontChooser.this, CheatAnimation.class);
 		intent.putExtra("content", content);
 		intent.putExtra("delay",delayTime);
-		SpeedChooser.this.startActivity(intent);   
+		intent.putExtra("fontSize",fontSize);
+		FontChooser.this.startActivity(intent);   
 		
 		
 	}

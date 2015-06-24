@@ -1,4 +1,4 @@
-package com.example.mywatch.phoneAppData;
+package phoneAppData;
 
 public class BluetoothException extends Exception {
 	public BluetoothException(String message) {

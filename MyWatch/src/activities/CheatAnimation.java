@@ -1,19 +1,18 @@
-package com.example.mywatch.activities;
+package activities;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import com.example.mywatch.R;
-import com.example.mywatch.androidElements.FixedSpeedScroller;
-import com.example.mywatch.androidElements.InfinitePagerAdapter;
-import com.example.mywatch.data.EntryView;
-import com.example.mywatch.sensors.AudioLevelDispatcher;
-import com.example.mywatch.sensors.AudioLevelListener;
-import com.example.mywatch.sensors.OnSwipeTouchListener;
-import com.example.mywatch.sensors.WristFlickDispatcher;
-import com.example.mywatch.sensors.WristFlickListener;
+import sensors.OnSwipeTouchListener;
+import sensors.WristFlickDispatcher;
+import sensors.WristFlickListener;
 
+import com.example.mywatch.R;
+import sensors.AudioLevelDispatcher;
+import sensors.AudioLevelListener;
+
+import data.EntryView;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -37,6 +36,8 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidElements.FixedSpeedScroller;
+import androidElements.InfinitePagerAdapter;
 
 public class CheatAnimation extends Activity implements WristFlickListener,AudioLevelListener {
 
@@ -531,7 +532,8 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 	}
 
 	@Override
-	public void onLevelChanged(double value) {
+	public void onLevelChanged(int value) {
+		// TODO Auto-generated method stub
 		
 	}
 	

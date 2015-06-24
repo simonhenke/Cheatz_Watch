@@ -1,27 +1,28 @@
-package com.example.mywatch.sensors;
+
+package sensors;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.util.Log;
 
 public class AudioLevelDispatcher {
 	
 	private AudioLevelListener listener;
-	MediaRecorder recorder;
-	Thread recorderThread;
-	AudioRecord audio;
-	int sampleRate = 8000;
-	int minimumReactionValue = 25;
-	int checkTime = 100;
-	int bufferSize;
-	double lastLevel;
-	boolean threadStopped;	
-	boolean releaseTimeActive;
+	private Thread recorderThread;
+	private AudioRecord audio;
+	private int sampleRate;
+	private int minimumReactionValue;
+	private int bufferSize;
+	private int lastLevel;
+	private boolean threadStopped;	
+	private boolean releaseTimeActive;
 	
 	public AudioLevelDispatcher(Context context){		
-			
+		SharedPreferences sharedPref = context.getSharedPreferences("CheatzCalibration", Context.MODE_PRIVATE);
+		minimumReactionValue  = sharedPref.getInt("blowReactionValue", 100);
+		sampleRate = 8000;
 	}
 	
 	public void startRecording()
@@ -31,8 +32,7 @@ public class AudioLevelDispatcher {
 				audio.release();
 				audio = null;
 			}			
-			threadStopped = false;				
-			recorder = new MediaRecorder();
+			threadStopped = false;			
 		    bufferSize = AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_MONO,
 		            AudioFormat.ENCODING_PCM_16BIT);    
 		    audio = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate,
@@ -55,7 +55,6 @@ public class AudioLevelDispatcher {
 			audio.release();
 		}		
 		recorderThread.interrupt();
-		Log.e("ONPAUSE","----");
 		threadStopped = true;	
 	}
 	
@@ -81,11 +80,12 @@ public class AudioLevelDispatcher {
 	 
 	            // Sense the voice...
 	            bufferReadResult = audio.read(buffer, 0, bufferSize);
-	            double sumLevel = 0;
+	            int sumLevel = 0;
 	            for (int i = 0; i < bufferReadResult; i++) {
 	                sumLevel += buffer[i];
 	            }
-	            lastLevel = Math.abs((sumLevel / bufferReadResult));
+	            lastLevel = (int) Math.abs((sumLevel / bufferReadResult));
+	            
 	        }
 	 
 	    } catch (Exception e) {
@@ -115,10 +115,8 @@ public class AudioLevelDispatcher {
 			 new Thread(new Runnable() {
 				 public void run() {
 					 releaseTimeActive = true;
-					 Log.e("test","test1");
 					 try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 					 releaseTimeActive = false;
-					 Log.e("test","test2");
 				 }
 			 }).start();
 		 }		 
