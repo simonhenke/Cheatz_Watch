@@ -10,5 +10,8 @@
     <string name="title_activity_speed_chooser">SpeedChooser</string>
     <string name="title_activity_cheat_animation">CheatAnimation</string>
     <string name="title_activity_sound_level_calibration">SoundLevelCalibration</string>
+    <string name="title_activity_explanation">Explanation</string>
+    <string name="title_activity_testx">Testx</string>
+    <string name="title_activity_empty">Empty</string>
 
 </resources>

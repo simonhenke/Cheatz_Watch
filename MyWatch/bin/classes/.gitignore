@@ -1,12 +1,3 @@
-/com/
 /android/
-/Activities/
-/AndroidElements/
-/Sensors/
-/hsd/
-/activities/
-/androidElements/
-/data/
-/phoneAppData/
-/phoneAppUtil/
-/sensors/
+/com/
+/.gitignore
