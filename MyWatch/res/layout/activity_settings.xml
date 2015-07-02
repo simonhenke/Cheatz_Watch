@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutSettings"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:weightSum="3" >
+
+    <Button
+        android:id="@+id/buttonShowInteraction"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:onClick="showInteractionsClicked"
+        android:text="Show Available Interaction" />
+
+    <Button
+        android:id="@+id/buttonCalibrateMic"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:onClick="calibrateMicClicked"
+        android:text="Calibrate Microphone" />
+
+    <Button
+        android:id="@+id/buttonCalibrateCam"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:onClick="calibrateCamClicked"
+        android:text="Calibrate Camera" />
+
+</LinearLayout>

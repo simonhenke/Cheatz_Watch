@@ -6,12 +6,14 @@ import com.example.mywatch.R;
 
 import sensors.AudioLevelDispatcher;
 import sensors.AudioLevelListener;
+import sensors.OnSwipeTouchListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -27,6 +29,8 @@ public class SoundLevelCalibration extends Activity implements AudioLevelListene
 	private Handler handler = new Handler();
 	private int maxProgress;
 	private SharedPreferences.Editor editor;
+	private OnSwipeTouchListener swipeListener;
+	private RelativeLayout myLayout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,15 @@ public class SoundLevelCalibration extends Activity implements AudioLevelListene
     	SharedPreferences sharedPref = this.getSharedPreferences("CheatzCalibration",Context.MODE_PRIVATE);
     	maxProgress = sharedPref.getInt("blowReactionValue", 100);
     	editor = sharedPref.edit();
+    	
+    	// init Layout
+    	
+		myLayout = (RelativeLayout)findViewById(R.id.layoutMic);
+		myLayout.setOnTouchListener(new OnSwipeTouchListener(this) {
+			public void onSwipeRight() {
+				finish();
+			}
+		});
     	
 		
 		//initialize variables
@@ -113,15 +126,8 @@ public class SoundLevelCalibration extends Activity implements AudioLevelListene
 	}
 
 
-
-
-
-
 	@Override
 	public void onVeryLoudSoundDetected() {}
-
-
-
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {}

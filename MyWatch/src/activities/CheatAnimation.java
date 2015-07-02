@@ -261,7 +261,7 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 					//Log.e("chars",""+length);
 					if(length != 0)
 						fontSize = 1000 / length;
-					fontSize = (fontSize < 12 ? 12: fontSize);
+					fontSize = (fontSize < 15 ? 15: fontSize);
 					fontSize = (fontSize > 30 ? 30: fontSize);
 					
 					

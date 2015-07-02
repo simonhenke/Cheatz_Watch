@@ -28,30 +28,35 @@
         <activity
             android:name="activities.ChooseFile"
             android:label="@string/app_name" />
-        
         <activity
             android:name="activities.SpeedChooser"
             android:label="@string/title_activity_speed_chooser" />
-      
         <activity
             android:name="activities.FontChooser"
             android:label="@string/app_name" />
         <activity
             android:name="activities.CheatAnimation"
             android:label="@string/title_activity_cheat_animation" />
-   
         <activity
             android:name="activities.SoundLevelCalibration"
             android:label="@string/title_activity_sound_level_calibration" />
-        
         <activity
-            android:name="activities.Explanation"        
+            android:name="activities.Explanation"
             android:label="@string/title_activity_explanation" />
-
-        
+        <activity
+            android:name="activities.Settings"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name="activities.CameraCalibration"
+            android:label="@string/title_activity_camera_calibration" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>
