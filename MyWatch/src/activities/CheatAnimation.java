@@ -2,9 +2,14 @@ package activities;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
+import sensors.CameraEventDispatcher;
+import sensors.CameraEventListener;
+import sensors.CameraPreview;
 import sensors.OnSwipeTouchListener;
+import sensors.PreviewFrameGrabber;
 import sensors.WristFlickDispatcher;
 import sensors.WristFlickListener;
 
@@ -19,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.hardware.Camera;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -34,12 +40,13 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidElements.FixedSpeedScroller;
 import androidElements.InfinitePagerAdapter;
 
-public class CheatAnimation extends Activity implements WristFlickListener,AudioLevelListener {
+public class CheatAnimation extends Activity implements WristFlickListener,AudioLevelListener, CameraEventListener {
 
 	String content;
 	boolean runLoop = false;
@@ -76,13 +83,17 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 	
 	//---- Audio Recording
 	private AudioLevelDispatcher audioLevelRecorder;
+	private CameraEventDispatcher cameraDispatcher;
 	//----
+	private FrameLayout preview;
+	
 	
 	// --------------------------------------------------------------------------------
 	
 	@Override
 	protected void onStart() {
 		super.onStart();
+		
 	}
 		
 	@Override
@@ -105,7 +116,9 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 		}			
 		
 		myLayout = (RelativeLayout)findViewById(R.id.relativeLayout1);			
-		stopIndicator = (TextView)findViewById(R.id.animStop);			
+		stopIndicator = (TextView)findViewById(R.id.animStop);	
+		
+		
 	
 		myThread = new Thread(animationThread);
     	myThread.start();	
@@ -118,6 +131,11 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
     	audioLevelRecorder = new AudioLevelDispatcher(this);
     	audioLevelRecorder.setListener(this);
     	audioLevelRecorder.startRecording();  	
+    	
+    	preview = findViewById(R.id.camera_callback);
+    	
+    	cameraDispatcher = new CameraEventDispatcher(this, preview);
+    	cameraDispatcher.setListener(this);
 	}
 	
 	public void showChapterTitles()
@@ -524,18 +542,27 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 
 	@Override
 	public void onVeryLoudSoundDetected() {
-		runOnUiThread(new Runnable() {
-	        public void run() {
-	         startStopAnimation();
-	        }
-	});	
+		//TODO show black screen
 	}
 
 	@Override
 	public void onLevelChanged(int value) {
-		// TODO Auto-generated method stub
+	
+
+	}
+
+	@Override
+	public void onCameraEvent() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				startStopAnimation();
+			}
+		});	
 		
 	}
+
+	
+  
 	
 	
 	// --------------------------------------------
