@@ -36,7 +36,7 @@ public class CameraCalibration extends Activity {
     private TextView myAwesomeTextView;
     private TextView seekbarText;
     private SeekBar thresholdControl;
-    private static int progressChanged = 25;
+    private int camThreshold;
     private SharedPreferences.Editor editor;
     private FrameLayout preview;
     private OnSwipeTouchListener swipeListener;
@@ -48,7 +48,7 @@ public class CameraCalibration extends Activity {
         setContentView(R.layout.activity_camera_calibration);
 
         SharedPreferences sharedPref = this.getSharedPreferences("CheatzCalibrationCam",Context.MODE_PRIVATE);
-        progressChanged = sharedPref.getInt("progressChanged", 25);
+        camThreshold = sharedPref.getInt("camThreshold", 25);
         editor = sharedPref.edit();
         
 		myLayout = (RelativeLayout)findViewById(R.id.layoutCam);
@@ -62,17 +62,17 @@ public class CameraCalibration extends Activity {
         //DebugText
         myAwesomeTextView = (TextView)findViewById(R.id.textview);
         seekbarText = (TextView) findViewById(R.id.seekbartext);
-        seekbarText.setText("Threshold: " + progressChanged);
+        seekbarText.setText("Threshold: " + camThreshold);
         //Slider init
         thresholdControl = (SeekBar) findViewById(R.id.seekbar);
-        thresholdControl.setProgress(progressChanged);
+        thresholdControl.setProgress(camThreshold);
         
         thresholdControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressChanged = progress;
-                seekbarText.setText("Threshold: " + progressChanged);
+                camThreshold = progress;
+                seekbarText.setText("Threshold: " + camThreshold);
             }
 
             @Override
@@ -82,7 +82,7 @@ public class CameraCalibration extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-            	editor.putInt("progressChanged", progressChanged);
+            	editor.putInt("camThreshold", camThreshold);
         		editor.commit();
             }
         });
@@ -124,9 +124,7 @@ public class CameraCalibration extends Activity {
         return camera;
     }
 
-    public static int getProgressChanged(){
-        return progressChanged;
-    }
+ 
     
     @Override
     protected void onResume() {

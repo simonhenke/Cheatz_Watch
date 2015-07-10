@@ -2,6 +2,7 @@ package sensors;
 
 import activities.CameraCalibration;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.util.Log;
 import android.widget.TextView;
@@ -30,8 +31,8 @@ public class PreviewFrameGrabber implements Camera.PreviewCallback {
 
         frameCounter++;
         //Convert Threshold
-        Integer threshold = new Integer(CameraCalibration.getProgressChanged());
-        float thresholdPercentage = threshold.floatValue() / 100;
+        int threshold =  context.getSharedPreferences("CheatzCalibrationCam",Context.MODE_PRIVATE).getInt("camThreshold", 25);
+        float thresholdPercentage = threshold / 100;
 
         //Check for darkness
         if (processor.darkerThanThreshold(data, thresholdPercentage, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height)) {
