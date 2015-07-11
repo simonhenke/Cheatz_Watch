@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import phoneAppUtil.IOCheatz;
+
 import com.example.mywatch.R;
 import com.example.mywatch.R.id;
 import com.example.mywatch.R.layout;
@@ -50,7 +52,7 @@ public class ChooseFile extends Activity {
 	}
 
 	void ShowSavedFiles(){
-		SavedFiles = getApplicationContext().fileList();
+		SavedFiles = IOCheatz.getFileList();
 		ArrayAdapter<String> adapter
 		= new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1,
