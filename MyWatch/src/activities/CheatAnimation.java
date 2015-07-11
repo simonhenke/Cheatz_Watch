@@ -5,6 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import phoneAppData.Chapter;
+import phoneAppData.Entry;
+import phoneAppData.ImageEntry;
+import phoneAppData.Sheet;
+import phoneAppData.TextEntry;
+import phoneAppUtil.IOCheatz;
+
 import sensors.CameraEventDispatcher;
 import sensors.CameraEventListener;
 import sensors.CameraPreview;
@@ -24,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -48,126 +56,126 @@ import androidElements.InfinitePagerAdapter;
 
 public class CheatAnimation extends Activity implements WristFlickListener,AudioLevelListener, CameraEventListener {
 
-	String content;
-	boolean runLoop = false;
-	boolean reverse = false;
-	boolean justSwitched = true;
+	private String path;
+	private boolean runLoop = false;
+	private boolean reverse = false;
+	private boolean justSwitched = true;
 
-	LinkedList<LinkedList<EntryView>> chapters;
-	
-	int currentChapterIndex = 0;
-	int[] chapterAnimSteps;
+	private LinkedList<LinkedList<EntryView>> chapters;
+
+	private int currentChapterIndex = 0;
+	private int[] chapterAnimSteps;
 	// TODO: chapterAnimSteps bei Page-Wechsel anpassen
 
 	//LinkedList<EntryView> entryViews;
-	RelativeLayout myLayout;
-	TextView stopIndicator;
-	int delayTime;
-	int animationTime;
-	int fontSize;
-	
-	ListIterator<View> it;
-	WristFlickDispatcher sensor;
-	Vibrator vibe;
-	Thread myThread;
-	RunnableAnim animationThread = new RunnableAnim();
-	Handler handler = new Handler(){		  
+	private RelativeLayout myLayout;
+	private TextView stopIndicator;
+	private int delayTime;
+	private int animationTime;
+	private int fontSize;
+
+	private ListIterator<View> it;
+	private WristFlickDispatcher sensor;
+	private Vibrator vibe;
+	private Thread myThread;
+	private RunnableAnim animationThread = new RunnableAnim();
+	private Handler handler = new Handler(){		  
 		@Override
 		public void handleMessage(Message msg) {
 			animationStep();
 		}
 	};
-	
+
 	private ViewPager pager; 
 	private InfinitePagerAdapter pagerAdapter;
-	
+
 	//---- Audio Recording
 	private AudioLevelDispatcher audioLevelRecorder;
 	private CameraEventDispatcher cameraDispatcher;
 	//----
 	private FrameLayout preview;
-	
-	
+
+
 	// --------------------------------------------------------------------------------
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+
 	}
-		
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cheat_animation);
-		
+
 		sensor = new WristFlickDispatcher(this);
 		sensor.setListener(this);
 		vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE) ;
 		chapters = new LinkedList<LinkedList<EntryView>>();
 		animationTime = 700;
-		
+
 		// Fetch extras from last activity
 		Bundle extras = getIntent().getExtras();
 		if(extras !=null) {
-		    content = extras.getString("content");
-		    delayTime = extras.getInt("delay");
-		    fontSize = extras.getInt("fontSize");
+			path  = extras.getString("path");
+			delayTime = extras.getInt("delay");
+			fontSize = extras.getInt("fontSize");
 		}			
-		
+
 		myLayout = (RelativeLayout)findViewById(R.id.relativeLayout1);			
 		stopIndicator = (TextView)findViewById(R.id.animStop);	
-		
-		
-	
+
+
+
 		myThread = new Thread(animationThread);
-    	myThread.start();	
-    	
-    	initViewPager();
-    	initChapters();	
-    	showChapterTitles();  	
-    	//initRecorder();
-    	
-    	audioLevelRecorder = new AudioLevelDispatcher(this);
-    	audioLevelRecorder.setListener(this);
-    	audioLevelRecorder.startRecording();  	
-    	
-    	preview = findViewById(R.id.camera_callback);
-    	
-    	cameraDispatcher = new CameraEventDispatcher(this, preview);
-    	cameraDispatcher.setListener(this);
+		myThread.start();	
+
+		initViewPager();
+		initChapters();	
+		showChapterTitles();  	
+		//initRecorder();
+
+		audioLevelRecorder = new AudioLevelDispatcher(this);
+		audioLevelRecorder.setListener(this);
+		audioLevelRecorder.startRecording();  	
+
+		preview = findViewById(R.id.camera_callback);
+
+		cameraDispatcher = new CameraEventDispatcher(this, preview);
+		cameraDispatcher.setListener(this);
 	}
-	
+
 	public void showChapterTitles()
 	{
 		// Fade in chapter-titles
-    	int a = animationTime;
-    	animationTime = 1;
-    	for(int i=0; i<chapters.size();i++)
-    	{
-    		currentChapterIndex = i;
-    		animationStep();
-    	}
-    	currentChapterIndex = 0;
-    	animationTime = a;
+		int a = animationTime;
+		animationTime = 1;
+		for(int i=0; i<chapters.size();i++)
+		{
+			currentChapterIndex = i;
+			animationStep();
+		}
+		currentChapterIndex = 0;
+		animationTime = a;
 	}
-	
+
 	public void onPause() {
 		super.onPause();
 		//Stop Animation
 		animationThread.onPause();
 		stopIndicator.setText("stopped");
 		runLoop = false;	
-		
-	
+
+
 		audioLevelRecorder.stopRecording();
 	}
-	
+
 	public void onResume() {
 		super.onResume();
-    	audioLevelRecorder.startRecording(); 
+		audioLevelRecorder.startRecording(); 
 	}
-	
+
 	private void initViewPager()
 	{	
 		//---- PagerStuff ####
@@ -193,21 +201,21 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 		setViewPagerScrollSpeed();
 		pager.setCurrentItem(pager.getChildCount() * InfinitePagerAdapter.LOOPS_COUNT / 2, false); // set current item in the adapter to middle		
 	}
-	
+
 	private void setViewPagerScrollSpeed()
 	{
 		try {
-		    Field mScroller;
-		    mScroller = ViewPager.class.getDeclaredField("mScroller");
-		    mScroller.setAccessible(true); 
-		    FixedSpeedScroller scroller = new FixedSpeedScroller(pager.getContext(), new DecelerateInterpolator());
-		    mScroller.set(pager, scroller);
+			Field mScroller;
+			mScroller = ViewPager.class.getDeclaredField("mScroller");
+			mScroller.setAccessible(true); 
+			FixedSpeedScroller scroller = new FixedSpeedScroller(pager.getContext(), new DecelerateInterpolator());
+			mScroller.set(pager, scroller);
 		} catch (NoSuchFieldException e) {
 		} catch (IllegalArgumentException e) {
 		} catch (IllegalAccessException e) {
 		}
 	}
-	
+
 	private void initChapters()
 	{
 		OnSwipeTouchListener touchListener = new OnSwipeTouchListener(this) {
@@ -217,115 +225,99 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 			public void onShortClick(){startStopAnimation();}
 		};	
 		
-		// Hardcoding Elements
-		
-			LinkedList<EntryView> chapter1 = new LinkedList<EntryView>();
-			String content1 = "chapter1:Lorem Ipsum;hallo hallo;Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt; The quick brown fox jumps over the lazy dog";
-			String[] c1 = content1.split(";");
-			for(String s: c1){
-				EntryView entry = new EntryView(this);		
-				entry.setText(s);
-				chapter1.add(entry);
-			}
-			chapters.add(chapter1);
-			
-			LinkedList<EntryView> chapter2 = new LinkedList<EntryView>();
-			String content2 = "zweizweizweizwei;Weit hinten, hinter den Wortbergen, fern der Länder Vokalien und Konsonantien leben die Blindtexte;Ein kleines Bächlein namens Duden fließt durch ihren Ort und versorgt sie mit den nötigen Regelialien; The quick brown fox jumps over the lazy dog2";
-			String[] c2 = content2.split(";");
-			for(String s: c2){		
-				EntryView entry = new EntryView(this);
-				entry.setText(s);
-				chapter2.add(entry);
-			}
-			chapters.add(chapter2);
-			
-			
-			LinkedList<EntryView> chapter3 = new LinkedList<EntryView>();
-			String content3 = "chapter:Numbers&Image;1;2;3";
-			String[] c3 = content3.split(";");
-			for(String s: c3){
-				EntryView entry = new EntryView(this);			
-				entry.setText(s);
-				chapter3.add(entry);
-			}
-			// IMAGE TEST
-			
-			EntryView e = new EntryView(this);
-			e.setBackgroundResource(R.drawable.test2);
-			e.setIsImage();
-			chapter3.add(e);
-			
-			chapters.add(chapter3);
-					
-			//------------
-						
-			chapterAnimSteps = new int[chapters.size()];
-			
+		Sheet cheatSheet = IOCheatz.loadFromArchive(path);
+		List<Chapter> chapterList = cheatSheet.getChapterList();
 
-			for(LinkedList<EntryView> list: chapters)
-			{
-				RelativeLayout rLayout = new RelativeLayout(this);
-				rLayout.setLayoutParams(myLayout.getLayoutParams());
-				rLayout.setOnTouchListener(touchListener);
-				rLayout.setGravity(Gravity.CENTER);	
-				
-				for(EntryView entry: list)
-				{		
-					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-					        ViewGroup.LayoutParams.WRAP_CONTENT);
-					params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-									
-					int length = entry.getText().length();
-					//Log.e("chars",""+length);
-					if(length != 0)
-						fontSize = 1000 / length;
-					fontSize = (fontSize < 15 ? 15: fontSize);
-					fontSize = (fontSize > 30 ? 30: fontSize);
-					
-					
-					entry.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize);
-					// Underline the chapter name (first entry)
-					if(entry == list.get(0)){
-						entry.setPaintFlags(entry.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-						entry.setTypeface(null, Typeface.BOLD);
-					}
-						
-					entry.setAlpha(0);
-					entry.setGravity(Gravity.CENTER);
-					entry.measure(MeasureSpec.UNSPECIFIED,MeasureSpec.UNSPECIFIED);
-					entry.setLayoutParams(params);	
-					
-					rLayout.addView(entry);
-				}									
-				addPage(rLayout);
+		//------------
+
+		chapterAnimSteps = new int[chapters.size()];
+		
+
+		
+		
+		//iterate over chapters
+		for(Chapter c: chapterList)
+		{
+			//create a new list for each chapter in the sheet
+			LinkedList<EntryView> chapterView = new LinkedList<EntryView>();
+			
+			RelativeLayout rLayout = new RelativeLayout(this);
+			rLayout.setLayoutParams(myLayout.getLayoutParams());
+			rLayout.setOnTouchListener(touchListener);
+			rLayout.setGravity(Gravity.CENTER);	
+
+			//iterate over entries
+			for(Entry en: c.getEntryList())
+			{		
+				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+						ViewGroup.LayoutParams.WRAP_CONTENT);
+				params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+				EntryView entry = new EntryView(this);
+				//fill entryview with the entry
+				if (en.getType() == Entry.Type.TEXT_ENTRY){
+					//set the text of the view
+					entry.setText( ((TextEntry) en).getText());
+				} else if (en.getType() == Entry.Type.IMAGE_ENTRY) {
+					//set the background image of the view
+					entry.setIsImage();
+					BitmapDrawable bmp = new BitmapDrawable(getResources(),((ImageEntry) en).getImage());
+				}
+				int length = entry.getText().length();
+				if(length != 0){
+					fontSize = 1000 / length;
+				}
+				fontSize = (fontSize < 15 ? 15: fontSize);
+				fontSize = (fontSize > 30 ? 30: fontSize);
+
+
+				entry.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize);
+				// Underline the chapter name (first entry)
+				if(en == c.getEntryList().get(0)){
+					entry.setPaintFlags(entry.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+					entry.setTypeface(null, Typeface.BOLD);
+				}
+
+				entry.setAlpha(0);
+				entry.setGravity(Gravity.CENTER);
+				entry.measure(MeasureSpec.UNSPECIFIED,MeasureSpec.UNSPECIFIED);
+				entry.setLayoutParams(params);	
+
+				//add view to layout and entrylist
+				rLayout.addView(entry);
+				chapterView.add(entry);
 			}
-	
+			//add list of entries to layout and chapterlist
+			chapters.add(chapterView);
+			addPage(rLayout);
+		}
+
 	}
-	
+
 	private void animationStep()
 	{		
 		LinkedList<EntryView> entryViews = new LinkedList<EntryView>(); 
 		entryViews = chapters.get(currentChapterIndex);		
 		int animStep = chapterAnimSteps[currentChapterIndex];
-		
+
 		String x = "List Order right now:";
 		for(EntryView a: entryViews){
 			x += a.getContent()+"|";
 		}
 		Log.d("list:",x);
-		
+
 		// ------ Determine Next, Previous and Previous2 Element ---------------
 		EntryView next = null;
 		EntryView previous = null;
 		EntryView previous2 = null;		
-			
+
 		if(reverse){
 			entryViews.addFirst(entryViews.pollLast());
 			next = entryViews.getFirst();	
 		}else{ // normal
 			next = entryViews.pollFirst();	
 		}
-		
+
 		// same for both					
 		if(!(animStep<1))
 			previous = entryViews.getLast(); 
@@ -334,8 +326,8 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 		if(!reverse)
 			entryViews.addLast(next);	
 		// ------------------------------------------------- #
-	
-		
+
+
 		// In Reverse-Mode, an image should only fade in, when only 1 other entry is visible
 		if(previous2 != null && reverse && previous2.isImage() && previous!= null){
 			previous2 = null;
@@ -348,45 +340,45 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 				animStep = 0;				
 			previous = null;			
 		}
-			
+
 		// In reverse-mode, if an image fades out we need to make sure that the previous 
 		// as well as the previous2 element are determined
 		if(reverse && next.isImage() && previous2 != null && !previous2.isImage())
 		{
 			previous2 = entryViews.get(entryViews.size()-2);
 		}
-					
+
 		// -------------------------- Animation Logic			
 		// --- Define the animations
-		
+
 		ObjectAnimator fadeIn = ObjectAnimator.ofFloat(next, "alpha", 0f, 1f);
 		fadeIn.setDuration(animationTime);
-		
+
 		ObjectAnimator fadeOut = ObjectAnimator.ofFloat(previous2, "alpha", 1f, 0f);
 		fadeOut.setDuration(animationTime);
-		
+
 		ObjectAnimator fadeOut2 = ObjectAnimator.ofFloat(previous, "alpha", 1f, 0f);
 		fadeOut.setDuration(animationTime);
-		
+
 		ObjectAnimator posMid = ObjectAnimator.ofFloat(next, "yPosition",1f,0.66f);
 		posMid.setDuration(animationTime);
-		
+
 		ObjectAnimator posUp = ObjectAnimator.ofFloat(previous, "yPosition",0.66f, 0.33f);
 		posUp.setDuration(animationTime);
-			
+
 		ObjectAnimator posOut = ObjectAnimator.ofFloat(previous2, "yPosition",0.33f, 0f);
 		posOut.setDuration(animationTime);
-		
+
 		if(previous2 != null && previous2.isImage()){
 			posOut.setFloatValues(0.5f,0.5f-0.33f);
 		}
-		
+
 		if(next.isImage()){
 			posMid.setFloatValues(0.5f+0.33f,0.5f);
 		}
-		
+
 		//---  Apply the Animation
-		
+
 		// animate next (element from bottom pos 1 (or reverse)
 		if(next != null){
 			Log.e("next",next.getContent());
@@ -398,7 +390,7 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 				fadeIn.start();			
 			}										
 		}
-		
+
 		// animate previous (element from pos1 to pos2)
 		if(previous != null){		
 			Log.e("previous",previous.getContent());	
@@ -406,13 +398,13 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 				posUp.reverse();
 			else
 				posUp.start();
-			
+
 			if(next.isImage() && !reverse)
 				fadeOut2.start();
 			else if(next.isImage() && reverse)
 				fadeOut2.reverse();				
 		}
-		
+
 		// animate previous2 (element from pos2 to top)
 		if(previous2  != null){
 			Log.e("previous2",previous2.getContent());
@@ -427,12 +419,12 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 		Log.e("---","-------");
 		animStep++;
 		chapterAnimSteps[currentChapterIndex] = animStep;
-		
-		
-	} //-------------------------------
-	
 
-				
+
+	} //-------------------------------
+
+
+
 	public void startStopAnimation(){
 		if(runLoop == true){
 			animationThread.onPause();
@@ -451,7 +443,7 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 		Log.e("->","long click");
 		vibe.vibrate(100);
 	}
-	
+
 	/**
 	 * Method to handle the logic and animation for changing between chapters
 	 * @param forwardOrBackwards value to determine the direction: 
@@ -465,8 +457,8 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 		{
 			LinkedList<EntryView> currentChapter;
 			LinkedList<EntryView> newChapter;
-			
-			
+
+
 			if(forwards){
 				if(currentChapterIndex+1 < chapters.size())
 					currentChapterIndex++;
@@ -486,7 +478,7 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 	public void onWristFlick() {		
 		pager.setCurrentItem(pager.getCurrentItem() + 1);
 	}
-	
+
 
 	public void addPage (View newPage)
 	{
@@ -495,49 +487,49 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 		// You might want to make "newPage" the currently displayed page:
 		//pager.setCurrentItem (pageIndex, true);
 	}
-	
+
 	class RunnableAnim implements Runnable {
-	    private Object mPauseLock;
-	    private boolean mPaused;
-	    private boolean mFinished;
+		private Object mPauseLock;
+		private boolean mPaused;
+		private boolean mFinished;
 
-	    public RunnableAnim() {
-	        mPauseLock = new Object();
-	        mPaused = true;
-	        mFinished = false;
-	    }
+		public RunnableAnim() {
+			mPauseLock = new Object();
+			mPaused = true;
+			mFinished = false;
+		}
 
-	    public void run() {
-	        while (!mFinished) {	      
-	            synchronized (mPauseLock) {
-	                while (mPaused) {
-	                    try {
-	                        mPauseLock.wait();
-	                    } catch (InterruptedException e) {
-	                    }
-	                }
-	            }	            
-	            handler.sendMessage(handler.obtainMessage());
+		public void run() {
+			while (!mFinished) {	      
+				synchronized (mPauseLock) {
+					while (mPaused) {
+						try {
+							mPauseLock.wait();
+						} catch (InterruptedException e) {
+						}
+					}
+				}	            
+				handler.sendMessage(handler.obtainMessage());
 				try {
 					Thread.sleep(delayTime);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-	        }
-	    }
+			}
+		}
 
-	    public void onPause() {
-	        synchronized (mPauseLock) {
-	            mPaused = true;
-	        }
-	    }
+		public void onPause() {
+			synchronized (mPauseLock) {
+				mPaused = true;
+			}
+		}
 
-	    public void onResume() {
-	        synchronized (mPauseLock) {
-	            mPaused = false;
-	            mPauseLock.notifyAll();
-	        }
-	    }  
+		public void onResume() {
+			synchronized (mPauseLock) {
+				mPaused = false;
+				mPauseLock.notifyAll();
+			}
+		}  
 	}
 
 	@Override
@@ -547,7 +539,7 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 
 	@Override
 	public void onLevelChanged(int value) {
-	
+
 
 	}
 
@@ -558,12 +550,12 @@ public class CheatAnimation extends Activity implements WristFlickListener,Audio
 				startStopAnimation();
 			}
 		});	
-		
+
 	}
 
-	
-  
-	
-	
+
+
+
+
 	// --------------------------------------------
 }

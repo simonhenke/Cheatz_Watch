@@ -63,8 +63,8 @@ public class ChooseFile extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 			String clickedFile = (String) parent.getItemAtPosition(position);
-			String content = ReadContent(clickedFile);
-			openChooseSpeed(content);
+			
+			openChooseSpeed(clickedFile);
 		}
 	};
 	
@@ -84,32 +84,31 @@ public class ChooseFile extends Activity {
     	 //Create a custom Dialog
     	String content = ReadContent(file);
     	
-        AlertDialog.Builder fileDialog 
-        = new AlertDialog.Builder(ChooseFile.this);
+        AlertDialog.Builder fileDialog = new AlertDialog.Builder(ChooseFile.this);
         fileDialog.setTitle(file);
         
         TextView textContent = new TextView(ChooseFile.this);
         textContent.setText(content);
-           LayoutParams textViewLayoutParams 
-            = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-           textContent.setLayoutParams(textViewLayoutParams);
-           
-           fileDialog.setView(textContent);
-           
-           fileDialog.setPositiveButton("OK", null);
-           
-           //Delete file in Internal Storage
-           OnClickListener DeleteListener = new OnClickListener(){
-        	   @Override
-        	   public void onClick(DialogInterface dialog, int which) {
-        		   deleteFile(file);
-        		   Toast.makeText(ChooseFile.this,file + " deleted",Toast.LENGTH_LONG).show();
-        		   ShowSavedFiles();
-        	   }
-           };
-           fileDialog.setNeutralButton("DELETE", DeleteListener);         
-           fileDialog.show();
-       }
+        LayoutParams textViewLayoutParams 
+        = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        textContent.setLayoutParams(textViewLayoutParams);
+
+        fileDialog.setView(textContent);
+
+        fileDialog.setPositiveButton("OK", null);
+
+        //Delete file in Internal Storage
+        OnClickListener DeleteListener = new OnClickListener(){
+        	@Override
+        	public void onClick(DialogInterface dialog, int which) {
+        		deleteFile(file);
+        		Toast.makeText(ChooseFile.this,file + " deleted",Toast.LENGTH_LONG).show();
+        		ShowSavedFiles();
+        	}
+        };
+        fileDialog.setNeutralButton("DELETE", DeleteListener);         
+        fileDialog.show();
+    }
 
 	String ReadContent(String file){
 		//Read file in Internal Storage
@@ -130,7 +129,7 @@ public class ChooseFile extends Activity {
 	
 	public void openChooseSpeed(String content) {
 	    Intent intent = new Intent(ChooseFile.this, SpeedChooser.class);
-	    intent.putExtra("content", content);
+	    intent.putExtra("path", content);
 	    ChooseFile.this.startActivity(intent);	    
 	}
 }

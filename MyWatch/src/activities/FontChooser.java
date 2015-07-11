@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 public class FontChooser extends Activity {
 	
-	String content;
+	String path;
 	int delayTime;
 	int fontSize;
 	int fontMinimum;
@@ -32,7 +32,7 @@ public class FontChooser extends Activity {
 		
 		Bundle extras = getIntent().getExtras();
 		if(extras !=null) {
-		    content = extras.getString("content");
+		    path = extras.getString("path");
 		    delayTime = extras.getInt("delay");
 		}		
 		
@@ -73,7 +73,7 @@ public class FontChooser extends Activity {
 	public void nextActivity(View view)
 	{
 		Intent intent = new Intent(FontChooser.this, CheatAnimation.class);
-		intent.putExtra("content", content);
+		intent.putExtra("path", path);
 		intent.putExtra("delay",delayTime);
 		intent.putExtra("fontSize",fontSize);
 		FontChooser.this.startActivity(intent);   

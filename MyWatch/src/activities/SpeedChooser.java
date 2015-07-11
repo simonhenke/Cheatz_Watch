@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 public class SpeedChooser extends Activity {
 	
-	String content;
+	String path;
 	int delayTime;
 	int delayMinimum;
 	
@@ -29,7 +29,7 @@ public class SpeedChooser extends Activity {
 		
 		Bundle extras = getIntent().getExtras();
 		if(extras !=null) {
-		    content = extras.getString("content");
+		    path = extras.getString("path");
 		}		
 		
 		
@@ -67,7 +67,7 @@ public class SpeedChooser extends Activity {
 	public void nextActivity(View view)
 	{
 		Intent intent = new Intent(SpeedChooser.this, FontChooser.class);
-		intent.putExtra("content", content);
+		intent.putExtra("path", path);
 		intent.putExtra("delay",delayTime);
 		SpeedChooser.this.startActivity(intent);   
 		
